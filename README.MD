@@ -11,6 +11,13 @@ This is a simple server that can be downloaded as an executable and run on a com
 3. Send a post request to the server with the code in the body of the request
 4. The server will upload the code to the arduino
 
+## How to build the executable
+
+```pyinstaller --onefile --windowed main.py```
+This will create an executable in the dist folder
+this executable can be run on any computer without python installed
+by simply double clicking on it
+
 ## How to run the server
 
 1. ```pip install -r requirements.txt```
