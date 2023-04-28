@@ -43,11 +43,9 @@ class Code(BaseModel):
 
 @app.post('/upload')
 async def upload(code: Code):
-    print(code.code)
     actual_code = code.code
 
     portname = guess_port_name()
-
     if not portname:
         raise HTTPException(status_code=500, detail="Make sure arduino is connected")
 
@@ -55,23 +53,21 @@ async def upload(code: Code):
     if not cmd:
         raise HTTPException(status_code=501, detail="Couldn't find Arduino command")
     
-    logging.debug("Code:\n%s", actual_code)
-    f, fname = tempfile.mkstemp(suffix=".ino")
-    try:
-        code_bytes = actual_code.encode("utf-8")
-        os.write(f, code_bytes)
-    finally:
-        os.close(f)
+    dirname = tempfile.mkdtemp()
+    sketchname = os.path.join(dirname, os.path.basename(dirname)) + ".ino"
+    f = open(sketchname, "wb")
+    f.write(actual_code.encode("utf-8") + b"\n")
+    f.close()
 
-    cmd_line = [cmd, "--upload", "C:\\Users\\Murf\\sketches_arduino\\led_blink\\led_blink.ino", "--port", portname]
-    logging.debug("Running: %s", cmd_line)
-    p = subprocess.Popen(cmd_line, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    if p.returncode != 0:
-        raise HTTPException(status_code=400, detail="Arduino command failed: %s" % err) 
+    cmd_line = [cmd, "--upload", "--port", portname]
+    cmd_line.append(sketchname)
+    logging.debug("Running: %s", " ".join(cmd_line))
 
-    logging.debug("\nArduino output:\n%s", out)
-    # Respond with success
+    rc = subprocess.call(cmd_line)
+    if rc != 0:
+        print("Arduino command failed:" + rc)
+        raise HTTPException(status_code=400, detail="Arduino command failed")
+
     return {'status': '200', 'message': "OK"}
 
 def get_arduino_command():
