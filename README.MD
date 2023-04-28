@@ -16,7 +16,10 @@ This is a simple server that can be downloaded as an executable and run on a com
 ```pyinstaller --onefile --windowed main.py```
 This will create an executable in the dist folder
 this executable can be run on any computer without python installed
-by simply double clicking on it
+
+<br>
+To run the executable run:
+```.\dist\main\main.exe`` in the src directory
 
 ## How to run the server
 
