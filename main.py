@@ -39,6 +39,16 @@ class Code(BaseModel):
 
 @app.post('/upload')
 async def upload(code: Code):
+    """
+    Upload code to the Arduino.
+     
+    params:
+    - code: The code to upload to the Arduino.
+
+    returns:
+    - status: 200 if successful, 400 if not.
+    - message: "OK" if successful, error message if not.
+    """
     actual_code = code.code
 
     portname = guess_port_name()
