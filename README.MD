@@ -19,9 +19,9 @@ this executable can be run on any computer without python installed
 
 <br>
 To run the executable run:
-```.\dist\main\main.exe`` in the src directory
+```.\dist\main\main.exe``` in the src directory
 
-## How to run the server
+## How to run the server, development mode
 
 1. ```pip install -r requirements.txt```
 2. ```python main.py```
